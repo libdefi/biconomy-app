@@ -51,7 +51,7 @@ export default function Auth() {
             const smartAccounts = new SmartAccount(
                 web3Provider, {
                     activeNetworkId: ChainId.POLYGON_MAINNET,
-                    supportedNetworkIds: [ChainId.POLYGON_MAINNET],
+                    supportedNetworksIds: [ChainId.POLYGON_MAINNET],
                 }
             )
             await smartAccount?.init()
@@ -60,8 +60,18 @@ export default function Auth() {
         } catch (err) {
             console.log('error setting up smart account...', err)
         }
+    }
 
+    const logout = async () => {
+        if (!sdkRef.current) {
+            console.error('Web3Modal not initialized')
+            return
+        }
 
+        await sdkRef.current.logout()
+        sdkRef.current.hideWallet()
+        setSmartAccount(null)
+        enableInterval(false)
     }
     return (
         <div>
